@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
 
 class StarController extends Controller
 {
@@ -53,25 +54,13 @@ class StarController extends Controller
 
         return response()->json($validate);
     }
-   
-   protected function getStars() 
-   {
-    return [
-        [
-            'id' => 1, 'name' => 'Luke Skywalker', 'mass' => 77 
-        ],
-        [
-            'id' => 2, 'name' => 'C-3PO', 'mass' => 75
-        ],
-        [
-            'id' => 3, 'name' => 'R2-D2', 'mass' => 32
-        ],
-        [
-            'id' => 4, 'name' => 'Anakin', 'mass' => 136
-        ],
-        [
-            'id' => 5, 'name' => 'Leia Organa', 'mass' => 49
-        ]
-    ];
-   }
+    
+    protected function getStars() 
+    {
+        $client = new Client();
+        $response = $client->request('GET', 'https://swapi.dev/api/people/');
+        $data = json_decode($response->getBody(), true);
+
+        return $data;
+    }
 }
